@@ -120,6 +120,7 @@ configure(project(":core")) {
     }
 
 }
+// https://jitpack.io/com/github/Zelaux/AdvancedContentInfo/-SNAPSHOT/build.log
 project(":core") {
     apply plugin: "java-library"
 
@@ -182,7 +183,7 @@ project(":core") {
         exclude("gas/entities/compByAnuke/**")
     }
 }
-configure([":core"/*, ":desktop", ":server", ":tools"*/].collect{project(it)}){
+configure(project(":core")){
     java{
 //        withJavadocJar()
         withSourcesJar()
@@ -191,10 +192,16 @@ configure([":core"/*, ":desktop", ":server", ":tools"*/].collect{project(it)}){
     publishing{
         publications{
             maven(MavenPublication){
+                groupId="com.github.Zelaux.AdvancedContentInfo"
+                artifactId="core"
+                version="0.0.1"
                 from components.java
             }
         }
     }
+}
+configure([":core"/*, ":desktop", ":server", ":tools"*/].collect{project(it)}){
+
 }
 task jarAndroid {
     dependsOn "jar"
