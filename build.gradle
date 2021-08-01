@@ -184,7 +184,7 @@ project(":core") {
 }
 configure([":core"/*, ":desktop", ":server", ":tools"*/].collect{project(it)}){
     java{
-        withJavadocJar()
+//        withJavadocJar()
         withSourcesJar()
     }
 
