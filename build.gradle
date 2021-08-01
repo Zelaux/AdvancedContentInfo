@@ -67,25 +67,17 @@ dependencies {
     implementation 'com.squareup:javapoet:1.12.1'
 
 }
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
-}
 allprojects {
+    apply plugin: 'maven-publish'
+    version = 'release'
+    group = 'com.github.Zelaux'
     tasks.withType(JavaCompile) {
         if (JavaVersion.current() != JavaVersion.VERSION_1_8) {
             options.compilerArgs.addAll(['--release', '8'])
         }
     }
-    apply plugin: 'maven-publish'
 
 
-    version = 'release'
-    group = 'com.github.Zelaux'
     repositories {
         mavenLocal()
         google()
@@ -127,13 +119,6 @@ configure(project(":core")) {
         }
     }
 
-    publishing{
-        publications{
-            maven(MavenPublication){
-                from components.java
-            }
-        }
-    }
 }
 project(":core") {
     apply plugin: "java-library"
@@ -195,6 +180,20 @@ project(":core") {
     jar {
         exclude("gas/entities/comp/**")
         exclude("gas/entities/compByAnuke/**")
+    }
+}
+configure([":core"/*, ":desktop", ":server", ":tools"*/].collect{project(it)}){
+    java{
+        withJavadocJar()
+        withSourcesJar()
+    }
+
+    publishing{
+        publications{
+            maven(MavenPublication){
+                from components.java
+            }
+        }
     }
 }
 task jarAndroid {
