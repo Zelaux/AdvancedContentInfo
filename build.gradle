@@ -71,10 +71,6 @@ dependencies {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-//                groupId = 'org.gradle.sample'
-            artifactId = 'AdvancedContentInfo'
-//                version = '1.1'
-
             from components.java
         }
     }
@@ -131,6 +127,13 @@ configure(project(":core")) {
         }
     }
 
+    publishing{
+        publications{
+            maven(MavenPublication){
+                from components.java
+            }
+        }
+    }
 }
 project(":core") {
     apply plugin: "java-library"
