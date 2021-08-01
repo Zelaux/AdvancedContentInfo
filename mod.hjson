@@ -1,0 +1,8 @@
+name: "advanced-content-info"
+displayName: "AdvancedContentInfo java library"
+author: "Zelaux"
+description: "Java library for java mods"
+main: "acontent.ACILibMod"
+version: 0.0.1
+minGameVersion: 129.1
+
