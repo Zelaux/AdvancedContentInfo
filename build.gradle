@@ -62,7 +62,6 @@ dependencies {
 //    compile project(":core")
 //    implementation project(":core")
     implementation arcModule('arc-core')
-    implementation "com.github.pixaxeofpixie.Braindustry-Mod:core:4.3"
     implementation "com.github.Anuken.Mindustry:core:$mindustryVersion"
     implementation "com.github.Anuken.Mindustry:annotations:$mindustryVersionAnnotations"
     implementation "com.github.Anuken.Mindustry:tools:$mindustryVersion"
