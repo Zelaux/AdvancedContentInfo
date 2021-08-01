@@ -1,12 +1,5 @@
-apply plugin: "java"
+//apply plugin: "java"
 
-version '1.0'
-
-
-repositories {
-    mavenCentral()
-    maven { url 'https://www.jitpack.io' }
-}
 buildscript {
     ext {
         arcHash = '128'
@@ -39,6 +32,17 @@ buildscript {
         classpath "com.github.Anuken.Arc:packer:$arcHash"
     }
 }
+plugins {
+    id 'java'
+    id 'maven-publish'
+}
+version '1.0'
+
+
+repositories {
+    mavenCentral()
+    maven { url 'https://www.jitpack.io' }
+}
 ext {
     //the build number that this mod is made for
     //version of SDK you will be using
@@ -64,7 +68,17 @@ dependencies {
 
 }
 
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+//                groupId = 'org.gradle.sample'
+            artifactId = 'AdvancedContentInfo'
+//                version = '1.1'
 
+            from components.java
+        }
+    }
+}
 allprojects {
     tasks.withType(JavaCompile) {
         if (JavaVersion.current() != JavaVersion.VERSION_1_8) {
