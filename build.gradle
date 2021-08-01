@@ -39,10 +39,7 @@ plugins {
 version '1.0'
 
 
-repositories {
-    mavenCentral()
-    maven { url 'https://www.jitpack.io' }
-}
+
 ext {
     //the build number that this mod is made for
     //version of SDK you will be using
@@ -183,7 +180,7 @@ project(":core") {
         exclude("gas/entities/compByAnuke/**")
     }
 }
-configure(project(":core")){
+/*configure(project(":core")){
     java{
 //        withJavadocJar()
         withSourcesJar()
@@ -199,9 +196,23 @@ configure(project(":core")){
             }
         }
     }
-}
+}*/
 configure([":core"/*, ":desktop", ":server", ":tools"*/].collect{project(it)}){
+    java{
+//        withJavadocJar()
+        withSourcesJar()
+    }
 
+    publishing{
+        publications{
+            maven(MavenPublication){
+//                groupId="com.github.Zelaux.AdvancedContentInfo"
+//                artifactId="core"
+//                version="0.0.1"
+                from components.java
+            }
+        }
+    }
 }
 task jarAndroid {
     dependsOn "jar"
