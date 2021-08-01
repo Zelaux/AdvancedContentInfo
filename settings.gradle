@@ -1,1 +1,1 @@
-include("annotations","tools","core")
+include("core")

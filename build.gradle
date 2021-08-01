@@ -27,7 +27,6 @@ buildscript {
     }
 
     dependencies {
-        classpath fileTree(dir: 'libs', include: ['*.jar'])
 //        classpath 'commons-io:commons-io:2.5'
 //        classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.11'
 //        classpath "com.github.anuken:packr:-SNAPSHOT"
@@ -57,9 +56,6 @@ ext {
     }
 }
 dependencies {
-//    implementation 'commons-io:commons-io:2.5'
-//    compile project(":core")
-//    implementation project(":core")
     implementation arcModule('arc-core')
     implementation "com.github.Anuken.Mindustry:core:$mindustryVersion"
     implementation "com.github.Anuken.Mindustry:annotations:$mindustryVersionAnnotations"
@@ -99,67 +95,6 @@ allprojects {
 //                '--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED',
 //                '--add-opens=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED'
         ])
-    }
-}
-
-configure(project(":annotations")) {
-    tasks.withType(JavaCompile) {
-        targetCompatibility = 8
-        sourceCompatibility = 8
-    }
-}
-
-//compile with java 8 compatibility for everything except the annotation project
-configure(subprojects - project(":annotations")) {
-    tasks.withType(JavaCompile) {
-        if (JavaVersion.current() != JavaVersion.VERSION_1_8) {
-            options.compilerArgs.addAll(['--release', '8', '--enable-preview'])
-        }
-
-        doFirst {
-            options.compilerArgs = options.compilerArgs.findAll { it != '--enable-preview' }
-        }
-    }
-
-    tasks.withType(Javadoc) {
-        options {
-            addStringOption('Xdoclint:none', '-quiet')
-            addBooleanOption('-enable-preview', true)
-            addStringOption('-release', '8')
-            addStringOption('-source', '14')
-        }
-    }
-}
-
-project(":annotations") {
-    tasks.withType(JavaCompile) {
-        if (JavaVersion.current() != JavaVersion.VERSION_1_8) {
-            options.compilerArgs.addAll(['--release', '14'])
-        }
-    }
-    apply plugin: 'maven-publish'
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
-        maven { url 'https://jitpack.io' }
-        jcenter()
-    }
-    apply plugin: "java-library"
-    dependencies {
-//        implementation "com.sun"
-        implementation arcModule('arc-core')
-//        compileOnly project(":core")
-        implementation "com.github.Anuken.Mindustry:annotations:$mindustryVersionAnnotations"
-        implementation "com.github.Anuken.Mindustry:core:$mindustryVersion"
-        implementation "com.github.Anuken.Mindustry:tools:$mindustryVersion"
-//                if(name!="tools")compile  project(":tools")
-//        implementation  project(":core")
-
-        apply plugin: "java"
-        compile 'com.squareup:javapoet:1.12.1'
-//        implementation "com.github.Anuken.Mindustry:entities:$mindustryVersion"
     }
 }
 configure(project(":core")) {
@@ -214,8 +149,6 @@ project(":core") {
         implementation "com.github.Anuken.Mindustry:tools:$mindustryVersion"
 //        api "com.github.Anuken:rhino:$rhinoVersion"
 
-        compileOnly project(":annotations")
-        annotationProcessor project(":annotations")
 //        annotationProcessor 'com.github.Anuken:jabel:34e4c172e65b3928cd9eabe1993654ea79c409cd'
 
     }
@@ -245,48 +178,6 @@ project(":core") {
     jar {
         exclude("gas/entities/comp/**")
         exclude("gas/entities/compByAnuke/**")
-    }
-}
-
-configure(project(":tools")) {
-
-    tasks.withType(JavaCompile) {
-        if (JavaVersion.current() != JavaVersion.VERSION_1_8) {
-            options.compilerArgs.addAll(['--release', '14'])
-        }
-
-        doFirst {
-//            options.compilerArgs = options.compilerArgs.findAll { it != '--enable-preview' }
-        }
-    }
-    tasks.withType(Javadoc) {
-        options {
-//            addStringOption('Xdoclint:none', '-quiet')
-            addStringOption('-release', '14')
-        }
-    }
-}
-project(":tools") {
-    apply plugin: "java"
-    repositories {
-        mavenCentral()
-        maven { url 'https://www.jitpack.io' }
-    }
-    dependencies {
-        implementation fileTree(dir: 'libs', include: ['*.jar'])
-        implementation 'commons-io:commons-io:2.5'
-
-        implementation project(":core")
-
-        implementation 'com.github.javaparser:javaparser-symbol-solver-core:3.22.1'
-        implementation "com.github.Anuken.Mindustry:annotations:$mindustryVersionAnnotations"
-        implementation "com.github.Anuken.Mindustry:core:$mindustryVersion"
-        implementation "com.github.Anuken.Mindustry:tools:$mindustryVersion"
-        compile arcModule("natives:natives-desktop")
-        compile arcModule("natives:natives-desktop")
-        compile arcModule("natives:natives-freetype-desktop")
-        compile arcModule("backends:backend-headless")
-        implementation arcModule(":extensions:packer")
     }
 }
 task jarAndroid {
