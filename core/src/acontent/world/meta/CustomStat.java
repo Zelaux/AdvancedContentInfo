@@ -1,6 +1,5 @@
 package acontent.world.meta;
 
-import acontent.annotations.ACIAnnotations;
 import arc.Core;
 import arc.func.Prov;
 import mindustry.world.meta.Stat;
@@ -8,7 +7,6 @@ import mindustry.world.meta.StatCat;
 
 import java.util.Locale;
 
-@ACIAnnotations.CustomStat
 public class CustomStat {
     public final AStatCat category;
     CustomStat maxConnections = new CustomStat("maxConnections",StatCat.function),
