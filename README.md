@@ -35,6 +35,7 @@ public class YourBlock extends Block {
 }
 ```
 Or make a separate class for this:
+
 YourStats.java
 ```java
 package com.examplemod.blocks;
