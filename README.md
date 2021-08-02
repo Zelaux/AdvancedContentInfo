@@ -141,3 +141,8 @@ dependencies {
         implementation 'com.github.Zelaux:AdvancedContentInfo:v1'
 }
 ```
+
+And don't forget to add the dependency to mod. (H) json
+```hjson
+dependencies: ["advanced-content-info"]
+```
