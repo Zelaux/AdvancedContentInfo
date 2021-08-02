@@ -38,8 +38,12 @@ public class AStat implements Comparable {
         return get(name, category.name());
     }
 
+    public String name() {
+        return nameProvider.get();
+    }
+
     public String localized() {
-        return Core.bundle.get("stat." + category.name().toLowerCase(Locale.ROOT));
+        return Core.bundle.get("stat." + name().toLowerCase(Locale.ROOT));
     }
 
     protected int index() {
