@@ -4,7 +4,6 @@ import arc.struct.ObjectMap;
 import arc.struct.OrderedMap;
 import arc.struct.Seq;
 import arc.util.Nullable;
-import acontent.world.meta.CustomStat;
 import mindustry.Vars;
 import mindustry.type.Item;
 import mindustry.type.ItemStack;
@@ -17,7 +16,7 @@ import java.util.Iterator;
 
 public class AStats extends Stats{
     @Nullable
-    private OrderedMap<AStatCat, OrderedMap<CustomStat, Seq<StatValue>>> aMap;
+    private OrderedMap<AStatCat, OrderedMap<AStat, Seq<StatValue>>> aMap;
     private boolean dirty;
 
     public AStats() {
@@ -70,47 +69,47 @@ public class AStats extends Stats{
     public void add(Stat stat, Attribute attr, boolean floating) {
         this.add(stat, attr, floating, 1.0F, false);
     }
-    public void add(CustomStat stat, float value, StatUnit unit) {
+    public void add(AStat stat, float value, StatUnit unit) {
         this.add(stat, (StatValues.number(value, unit)));
     }
 
-    public void add(CustomStat stat, float value) {
+    public void add(AStat stat, float value) {
         this.add(stat, value, StatUnit.none);
     }
 
-    public void addPercent(CustomStat stat, float value) {
+    public void addPercent(AStat stat, float value) {
         this.add(stat, (StatValues.number((float)((int)(value * 100.0F)), StatUnit.percent)));
     }
 
-    public void add(CustomStat stat, boolean value) {
+    public void add(AStat stat, boolean value) {
         this.add(stat, (StatValues.bool(value)));
     }
 
-    public void add(CustomStat stat, Item item) {
+    public void add(AStat stat, Item item) {
         this.add(stat, (StatValues.items(new ItemStack(item, 1))));
     }
 
-    public void add(CustomStat stat, ItemStack item) {
+    public void add(AStat stat, ItemStack item) {
         this.add(stat, (StatValues.items(item)));
     }
 
-    public void add(CustomStat stat, Liquid liquid, float amount, boolean perSecond) {
+    public void add(AStat stat, Liquid liquid, float amount, boolean perSecond) {
         this.add(stat, (StatValues.liquid(liquid, amount, perSecond)));
     }
 
-    public void add(CustomStat stat, Attribute attr) {
+    public void add(AStat stat, Attribute attr) {
         this.add(stat, attr, false, 1.0F, false);
     }
 
-    public void add(CustomStat stat, Attribute attr, float scale) {
+    public void add(AStat stat, Attribute attr, float scale) {
         this.add(stat, attr, false, scale, false);
     }
 
-    public void add(CustomStat stat, Attribute attr, boolean floating) {
+    public void add(AStat stat, Attribute attr, boolean floating) {
         this.add(stat, attr, floating, 1.0F, false);
     }
 
-    public void add(CustomStat stat, Attribute attr, boolean floating, float scale, boolean startZero) {
+    public void add(AStat stat, Attribute attr, boolean floating, float scale, boolean startZero) {
         Iterator<Block> var6 = Vars.content.blocks().select((blockx) -> {
             Floor f;
 
@@ -131,7 +130,7 @@ public class AStats extends Stats{
     @Override
     public void add(Stat stat, Attribute attr, boolean floating, float scale, boolean startZero) {
         super.add(stat,attr,floating,scale,startZero);
-        add(CustomStat.fromExist(stat),attr,floating,scale,startZero);
+        add(AStat.fromExist(stat),attr,floating,scale,startZero);
 
     }
 
@@ -139,15 +138,15 @@ public class AStats extends Stats{
     public void add(Stat stat, String format, Object... args) {
         this.add(stat, (StatValues.string(format, args)));
     }
-    public void add(CustomStat stat, String format, Object... args) {
+    public void add(AStat stat, String format, Object... args) {
         this.add(stat, (StatValues.string(format, args)));
     }
 
     public void add(Stat stat, StatValue value) {
         super.add(stat,value);
-        add(CustomStat.fromExist(stat),value);
+        add(AStat.fromExist(stat),value);
     }
-    public void add(CustomStat stat, StatValue value) {
+    public void add(AStat stat, StatValue value) {
         if (this.aMap == null) {
             this.aMap = new OrderedMap<>();
         }
@@ -166,7 +165,7 @@ public class AStats extends Stats{
             this.aMap = new OrderedMap<>();
         }
 
-        AStatCat category = AStatCat.fromExist(stat.category);
+        AStatCat category = AStatCat.get(stat.category);
         if (this.aMap.containsKey(category) && ((OrderedMap)this.aMap.get(category)).containsKey(stat)) {
             ((OrderedMap)this.aMap.get(category)).remove(stat);
             this.dirty = true;
@@ -175,7 +174,7 @@ public class AStats extends Stats{
         }
     }
 
-    public OrderedMap<AStatCat, OrderedMap<CustomStat, Seq<StatValue>>> toAMap() {
+    public OrderedMap<AStatCat, OrderedMap<AStat, Seq<StatValue>>> toAMap() {
         if (this.aMap == null) {
             this.aMap = new OrderedMap<>();
         }

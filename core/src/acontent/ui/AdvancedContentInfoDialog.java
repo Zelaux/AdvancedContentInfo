@@ -1,6 +1,6 @@
 package acontent.ui;
 
-import acontent.world.meta.CustomStat;
+import acontent.world.meta.AStat;
 import arc.scene.ui.ScrollPane;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectMap;
@@ -62,7 +62,7 @@ public class AdvancedContentInfoDialog extends ContentInfoDialog {
 
         while(true) {
             AStatCat cat;
-            OrderedMap<CustomStat, Seq<StatValue>> map;
+            OrderedMap<AStat, Seq<StatValue>> map;
             do {
                 if (!var4.hasNext()) {
                     if (content.details != null) {
@@ -85,10 +85,10 @@ public class AdvancedContentInfoDialog extends ContentInfoDialog {
                 table.row();
             }
 
-            ObjectMap.Keys<CustomStat> var7 = map.keys().iterator();
-            OrderedMap<CustomStat, Seq<StatValue>> mapCathe=map;
+            ObjectMap.Keys<AStat> var7 = map.keys().iterator();
+            OrderedMap<AStat, Seq<StatValue>> mapCathe=map;
             while(var7.hasNext()) {
-                CustomStat stat = var7.next();
+                AStat stat = var7.next();
                 table.table((inset) -> {
                     inset.left();
                     inset.add("[lightgray]" + stat.localized() + ":[] ").left();

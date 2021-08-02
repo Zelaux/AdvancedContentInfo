@@ -1,7 +1,6 @@
-//apply plugin: "java"
-
 buildscript {
     ext {
+//        arcHash='b8db131172548e1f10ba86392e09819c34296711'
         arcHash = '128'
         mindustryVersion = 'v129.1'
         mindustryVersionAnnotations = 'v126.2'
@@ -20,9 +19,11 @@ buildscript {
     }
 
     dependencies {
-//        classpath 'commons-io:commons-io:2.5'
-//        classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.11'
-//        classpath "com.github.anuken:packr:-SNAPSHOT"
+        classpath fileTree(dir: 'libs', include: ['*.jar'])
+        classpath 'commons-io:commons-io:2.5'
+        classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.11'
+        classpath "com.github.anuken:packr:-SNAPSHOT"
+//        classpath "com.github.Anuken.Arc:packer:$mindustryVersion"
         classpath arcModule("packer")
         classpath arcModule("g3d")
         classpath "com.github.Anuken.Arc:arc-core:$mindustryVersion"
@@ -37,9 +38,6 @@ plugins {
     id 'maven-publish'
 }
 version '1.0'
-
-
-
 ext {
     //the build number that this mod is made for
     //version of SDK you will be using
@@ -57,6 +55,10 @@ ext {
     }
 }
 dependencies {
+    compileClasspath fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'commons-io:commons-io:2.5'
+//    compile project(":core")
+//    implementation project(":core")
     implementation arcModule('arc-core')
     implementation "com.github.Anuken.Mindustry:core:$mindustryVersion"
     implementation "com.github.Anuken.Mindustry:annotations:$mindustryVersionAnnotations"
@@ -64,17 +66,15 @@ dependencies {
     implementation 'com.squareup:javapoet:1.12.1'
 
 }
+
+
 allprojects {
-    apply plugin: 'maven-publish'
-    version = 'release'
-    group = 'com.github.Zelaux'
     tasks.withType(JavaCompile) {
         if (JavaVersion.current() != JavaVersion.VERSION_1_8) {
             options.compilerArgs.addAll(['--release', '8'])
         }
     }
-
-
+    apply plugin: 'maven-publish'
     repositories {
         mavenLocal()
         google()
@@ -85,15 +85,10 @@ allprojects {
         jcenter()
     }
     tasks.withType(JavaCompile) {
-        targetCompatibility = 8
-        sourceCompatibility = JavaVersion.VERSION_16
+        targetCompatibility = 14
+        sourceCompatibility = 8
         options.encoding = "UTF-8"
         options.compilerArgs += ["-Xlint:deprecation"]
-        options.forkOptions.jvmArgs.addAll([
-//                '--illegal-access=permit',
-//                '--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED',
-//                '--add-opens=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED'
-        ])
     }
 }
 configure(project(":core")) {
@@ -117,7 +112,6 @@ configure(project(":core")) {
     }
 
 }
-// https://jitpack.io/com/github/Zelaux/AdvancedContentInfo/-SNAPSHOT/build.log
 project(":core") {
     apply plugin: "java-library"
 
@@ -176,27 +170,10 @@ project(":core") {
         }
     }
     jar {
-        exclude("gas/entities/comp/**")
-        exclude("gas/entities/compByAnuke/**")
+        exclude("braindustry/entities/comp/**")
+        exclude("braindustry/entities/compByAnuke/**")
     }
 }
-/*configure(project(":core")){
-    java{
-//        withJavadocJar()
-        withSourcesJar()
-    }
-
-    publishing{
-        publications{
-            maven(MavenPublication){
-                groupId="com.github.Zelaux.AdvancedContentInfo"
-                artifactId="core"
-                version="0.0.1"
-                from components.java
-            }
-        }
-    }
-}*/
 configure([":core"/*, ":desktop", ":server", ":tools"*/].collect{project(it)}){
     java{
 //        withJavadocJar()
