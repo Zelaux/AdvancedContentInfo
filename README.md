@@ -3,11 +3,6 @@ AdvancedContentInfo
 
 `AdvancedContentInfo` is a Mindustry java mod library for making out stats and stats categories.
 
-Source file generation can be useful when doing things such as annotation processing or interacting
-with metadata files (e.g., database schemas, protocol formats). By generating code, you eliminate
-the need to write boilerplate while also keeping a single source of truth for the metadata.
-
-
 ### Example
 You can initialize your stats and your categories in the setStats method of Block:
 YourBlock.java
