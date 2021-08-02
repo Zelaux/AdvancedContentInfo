@@ -16,31 +16,26 @@ public class AStat implements Comparable {
     public final AStatCat category;
     private final Prov<String> nameProvider;
 
-    public AStat(String name, AStatCat category) {
+    private AStat(String name, AStatCat category) {
         nameProvider = () -> name;
         this.category = category;
+        allStats.add(this);
     }
 
-    public AStat(String name, StatCat category) {
-        this(name, AStatCat.get(category));
+    public static AStat get(String name, AStatCat category) {
+        return statMap.get(name, () -> new AStat(name, category));
     }
 
-    public AStat(String name, String category) {
-        this(name, AStatCat.get(category));
+    public static AStat get(String name, String category) {
+        return get(name, AStatCat.get(category));
     }
 
-    public AStat(String name) {
-        nameProvider = () -> name;
-        this.category = AStatCat.general;
+    public static AStat get(Stat stat) {
+        return get(stat.name(), stat.category);
     }
 
-    public AStat(Stat stat) {
-        nameProvider = stat::name;
-        category = AStatCat.get(stat.category);
-    }
-
-    public static AStat fromExist(Stat stat) {
-        return new AStat(stat);
+    public static AStat get(String name, StatCat category) {
+        return get(name, category.name());
     }
 
     public String localized() {

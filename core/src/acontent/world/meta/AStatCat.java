@@ -23,7 +23,7 @@ public class AStatCat implements Comparable {
 
     private AStatCat(String name, int index) {
         nameProvider = () -> name;
-        statCatMap.put(name, this);
+//        statCatMap.put(name, this);
         if (index < 0 || index > allStatCats.size) {
             allStatCats.add(this);
         } else {

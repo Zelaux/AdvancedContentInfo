@@ -130,7 +130,7 @@ public class AStats extends Stats{
     @Override
     public void add(Stat stat, Attribute attr, boolean floating, float scale, boolean startZero) {
         super.add(stat,attr,floating,scale,startZero);
-        add(AStat.fromExist(stat),attr,floating,scale,startZero);
+        add(AStat.get(stat),attr,floating,scale,startZero);
 
     }
 
@@ -144,7 +144,7 @@ public class AStats extends Stats{
 
     public void add(Stat stat, StatValue value) {
         super.add(stat,value);
-        add(AStat.fromExist(stat),value);
+        add(AStat.get(stat),value);
     }
     public void add(AStat stat, StatValue value) {
         if (this.aMap == null) {
