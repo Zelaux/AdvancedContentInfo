@@ -1,14 +1,12 @@
+import arc.util.OS
+
 buildscript {
     ext {
 //        arcHash='b8db131172548e1f10ba86392e09819c34296711'
         arcHash = '128'
         mindustryVersion = 'v129.1'
         mindustryVersionAnnotations = 'v126.2'
-        arcModule = { String name ->
-            //skip to last submodule
-            if (name.contains(':')) name = name.split(':').last()
-            return "com.github.Anuken.Arc:$name:$arcHash"
-        }
+        modsDirectory = "classic"
     }
     repositories {
         mavenLocal()
@@ -19,17 +17,10 @@ buildscript {
     }
 
     dependencies {
-        classpath fileTree(dir: 'libs', include: ['*.jar'])
-        classpath 'commons-io:commons-io:2.5'
-        classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.11'
-        classpath "com.github.anuken:packr:-SNAPSHOT"
-//        classpath "com.github.Anuken.Arc:packer:$mindustryVersion"
-        classpath arcModule("packer")
-        classpath arcModule("g3d")
-        classpath "com.github.Anuken.Arc:arc-core:$mindustryVersion"
         classpath "com.github.Anuken.Mindustry:annotations:$mindustryVersionAnnotations"
         classpath "com.github.Anuken.Mindustry:core:$mindustryVersion"
         classpath "com.github.Anuken.Mindustry:tools:$mindustryVersion"
+        classpath "com.github.Anuken.Arc:arc-core:$mindustryVersion"
         classpath "com.github.Anuken.Arc:packer:$arcHash"
     }
 }
@@ -131,38 +122,24 @@ project(":core") {
     dependencies {
         compileJava.dependsOn(preGen)
 
-        api "org.lz4:lz4-java:1.4.1"
         implementation arcModule("arc-core")
-        implementation arcModule("extensions:freetype")
-        implementation arcModule("extensions:g3d")
-        implementation arcModule("extensions:fx")
-        implementation arcModule("extensions:arcnet")
-//        compileOnly "com.github.Anuken.Mindustry:entities:$mindustryVersion"
         implementation "com.github.Anuken.Mindustry:annotations:$mindustryVersionAnnotations"
         implementation "com.github.Anuken.Mindustry:core:$mindustryVersion"
         implementation "com.github.Anuken.Mindustry:tools:$mindustryVersion"
-//        api "com.github.Anuken:rhino:$rhinoVersion"
-
-//        annotationProcessor 'com.github.Anuken:jabel:34e4c172e65b3928cd9eabe1993654ea79c409cd'
 
     }
 
     afterEvaluate {
         task mergedJavadoc(type: Javadoc) {
-            if (true) return null;
-            def blacklist = [project(":annotations")]
-            if (findProject(":android") != null) {
-                blacklist += project(":android")
-            }
 
             source rootProject.subprojects.collect { project ->
-                if (!blacklist.contains(project) && project.hasProperty("sourceSets")) {
+                if (project.hasProperty("sourceSets")) {
                     return project.sourceSets.main.allJava
                 }
             }
 
             classpath = files(rootProject.subprojects.collect { project ->
-                if (!blacklist.contains(project) && project.hasProperty("sourceSets")) {
+                if (project.hasProperty("sourceSets")) {
                     return project.sourceSets.main.compileClasspath
                 }
             })
@@ -174,9 +151,9 @@ project(":core") {
         exclude("braindustry/entities/compByAnuke/**")
     }
 }
-configure([":core"/*, ":desktop", ":server", ":tools"*/].collect{project(it)}){
+configure([":core"].collect{project(it)}){
     java{
-//        withJavadocJar()
+        withJavadocJar()
         withSourcesJar()
     }
 
@@ -232,5 +209,27 @@ task deploy(type: Jar) {
     doLast {
         delete { delete "$buildDir/libs/${project.archivesBaseName}Desktop.jar" }
         delete { delete "$buildDir/libs/${project.archivesBaseName}Android.jar" }
+    }
+}
+task mjar() {
+    dependsOn "jar"
+    doFirst {
+    }
+    doLast {
+        def intoPath = null
+        if ("classic".equals(modsDirectory)) {
+            intoPath = "${OS.getAppDataDirectoryString("Mindustry")}/mods/"
+        } else if (modsDirectory!=null)intoPath=modsDirectory;
+        if (intoPath != null) {
+            delete{
+                delete "${intoPath}/${project.archivesBaseName}Desktop.jar"
+            }
+            copy {
+                from "$buildDir/libs/${project.archivesBaseName}Desktop.jar"
+                into intoPath
+            }
+            def time = LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
+            System.out.println("\tlast build time: ${time}")
+        }
     }
 }
