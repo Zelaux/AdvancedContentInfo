@@ -31,6 +31,7 @@ public class YourBlock extends Block {
         aStats.add(AStat.get("your_stat","your_category"),/*your statValue*/);
         aStats.add(AStat.get("your_stat1", AStatCat.get("your_category2")),/*your statValue*/);
         aStats.add(AStat.get("your_stat2", StatCat.function),/*your statValue*/);
+        aStats.add(Stat.health,/*your statValue*/);
     }
 }
 ```
@@ -71,6 +72,7 @@ public class YourBlock extends Block {
         aStats.add(YourStats.yourStat,/*your statValue*/);
         aStats.add(YourStats.yourStat2,/*your statValue*/);
         aStats.add(YourStats.yourStat3,/*your statValue*/);
+        aStats.add(Stat.health,/*your statValue*/);
     }
 }
 ```
