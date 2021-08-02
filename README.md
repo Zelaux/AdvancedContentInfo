@@ -11,7 +11,8 @@ the need to write boilerplate while also keeping a single source of truth for th
 ### Example
 You can initialize your stats and your categories in the setStats method of Block:
 YourBlock.java
-```package com.examplemod.blocks;
+```java
+package com.examplemod.blocks;
 
 import acontent.world.meta.AStat;
 import acontent.world.meta.AStats;
@@ -35,7 +36,8 @@ public class YourBlock extends Block {
 ```
 Or make a separate class for this:
 YourStats.java
-```package com.examplemod.blocks;
+```java
+package com.examplemod.blocks;
 
 import acontent.world.meta.AStat;
 import acontent.world.meta.AStatCat;
@@ -49,7 +51,8 @@ public class YourStats {
 }
 ```
 YourBlock.java
-```package com.examplemod.blocks;
+```java
+package com.examplemod.blocks;
 
 import acontent.world.meta.AStats;
 import mindustry.world.Block;
