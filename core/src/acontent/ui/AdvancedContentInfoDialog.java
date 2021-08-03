@@ -32,6 +32,7 @@ public class AdvancedContentInfoDialog extends ContentInfoDialog {
             super.show(content);
             return;
         }
+        AStats stats = (AStats)content.stats;
         this.cont.clear();
         Table table = new Table();
         table.margin(10.0F);
@@ -43,7 +44,7 @@ public class AdvancedContentInfoDialog extends ContentInfoDialog {
         });
         table.row();
         if (content.description != null) {
-            boolean any = ((AStats) content.stats).toAMap().size > 0;
+            boolean any = stats.toAMap().size > 0;
             if (any) {
                 table.add("@category.purpose").color(Pal.accent).fillX().padTop(10.0F);
                 table.row();
@@ -57,7 +58,6 @@ public class AdvancedContentInfoDialog extends ContentInfoDialog {
             }
         }
 
-        AStats stats = (AStats)content.stats;
         ObjectMap.Keys<AStatCat> var4 = stats.toAMap().keys().iterator();
 
         while(true) {

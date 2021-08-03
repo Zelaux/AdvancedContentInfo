@@ -147,51 +147,50 @@ public class AStats extends Stats{
         add(AStat.get(stat),value);
     }
     public void add(AStat stat, StatValue value) {
-        if (this.aMap == null) {
-            this.aMap = new OrderedMap<>();
+        if (aMap == null) {
+            aMap = new OrderedMap<>();
         }
 
-        if (!this.aMap.containsKey(stat.category)) {
-            this.aMap.put(stat.category, new OrderedMap<>());
+        if (!aMap.containsKey(stat.category)) {
+            aMap.put(stat.category, new OrderedMap<>());
         }
 
-        ((Seq)((OrderedMap)this.aMap.get(stat.category)).get(stat, Seq::new)).add(value);
-        this.dirty = true;
+        aMap.get(stat.category).get(stat, Seq::new).add(value);
+        dirty = true;
     }
 
     @Override
     public void remove(Stat stat) {
-        if (this.aMap == null) {
-            this.aMap = new OrderedMap<>();
+        super.remove(stat);
+        remove(AStat.get(stat));
+    }
+    public void remove(AStat stat) {
+        if (aMap == null) {
+            aMap = new OrderedMap<>();
         }
 
-        AStatCat category = AStatCat.get(stat.category);
-        if (this.aMap.containsKey(category) && ((OrderedMap)this.aMap.get(category)).containsKey(stat)) {
-            ((OrderedMap)this.aMap.get(category)).remove(stat);
-            this.dirty = true;
+        AStatCat category = stat.category;
+        if (aMap.containsKey(category) && aMap.get(category).containsKey(stat)) {
+            this.aMap.get(category).remove(stat);
+            dirty = true;
         } else {
             throw new RuntimeException("No stat entry found: \"" + stat + "\" in block.");
         }
     }
 
-    public OrderedMap<AStatCat, OrderedMap<AStat, Seq<StatValue>>> toAMap() {
-        if (this.aMap == null) {
-            this.aMap = new OrderedMap<>();
-        }
+    public OrderedMap<AStatCat, OrderedMap<AStat, Seq<StatValue>>> toAMap(){
+        if(aMap == null) aMap = new OrderedMap<>();
 
-        if (this.dirty) {
-            this.aMap.orderedKeys().sort();
-            ObjectMap.Entries var1 = this.aMap.entries().iterator();
-
-            while(var1.hasNext()) {
-                ObjectMap.Entry<StatCat, OrderedMap<Stat, Seq<StatValue>>> entry = var1.next();
-                ((OrderedMap)entry.value).orderedKeys().sort();
+        //sort stats by index if they've been modified
+        if(dirty){
+            aMap.orderedKeys().sort();
+            for(ObjectMap.Entry<AStatCat, OrderedMap<AStat, Seq<StatValue>>> entry : aMap.entries()){
+                entry.value.orderedKeys().sort();
             }
 
-            this.dirty = false;
+            dirty = false;
         }
-
-        return this.aMap;
+        return aMap;
     }
 
     public Stats copy(Stats stats) {

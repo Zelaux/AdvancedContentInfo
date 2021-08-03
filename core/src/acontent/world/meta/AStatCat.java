@@ -9,7 +9,6 @@ import mindustry.world.meta.StatCat;
 public class AStatCat implements Comparable {
     private static final ObjectMap<String, AStatCat> statCatMap = new ObjectMap<>();
     private static final Seq<AStatCat> allStatCats = new Seq<>();
-    public static AStatCat general = AStatCat.get(StatCat.general);
     public static Seq<AStatCat> getAllStatCats(){
         return allStatCats.copy();
     }
@@ -49,7 +48,7 @@ public class AStatCat implements Comparable {
         return nameProvider.get();
     }
 
-    protected int index() {
+    public int index() {
         return allStatCats.indexOf(this);
     }
 
