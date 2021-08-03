@@ -6,6 +6,8 @@ import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import mindustry.world.meta.StatCat;
 
+import java.util.Locale;
+
 public class AStatCat implements Comparable {
     private static final ObjectMap<String, AStatCat> statCatMap = new ObjectMap<>();
     private static final Seq<AStatCat> allStatCats = new Seq<>();
@@ -41,7 +43,7 @@ public class AStatCat implements Comparable {
         return get(category,-1);
     }
     public static AStatCat get(String category,int index) {
-        return statCatMap.get(category, () -> new AStatCat(category,index));
+        return statCatMap.get(category.toLowerCase(Locale.ROOT), () -> new AStatCat(category,index));
     }
 
     public String name() {

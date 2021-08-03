@@ -38,7 +38,7 @@ public class AStat implements Comparable {
     }
 
     public static AStat get(String name, AStatCat category, int index) {
-        return statMap.get(name, () -> new AStat(name, category, index));
+        return statMap.get(name.toLowerCase(Locale.ROOT), () -> new AStat(name, category, index));
     }
 
     public static AStat get(String name, AStatCat category) {
