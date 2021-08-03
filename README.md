@@ -145,17 +145,17 @@ Depend via Maven:
 <dependency>
 	    <groupId>com.github.Zelaux</groupId>
 	    <artifactId>AdvancedContentInfo</artifactId>
-	    <version>v1</version>
+	    <version>v1.2</version>
 </dependency>
 ```
 or Gradle:
 ```groovy
 dependencies {
-        implementation 'com.github.Zelaux:AdvancedContentInfo:v1'
+        implementation 'com.github.Zelaux:AdvancedContentInfo:v1.2'
 }
 ```
 
-And don't forget to add the dependency to mod. (H) json
+And don't forget to add the dependency to mod. (h).json
 ```hjson
 dependencies: ["advanced-content-info"]
 ```
