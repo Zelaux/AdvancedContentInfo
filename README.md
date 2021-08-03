@@ -3,7 +3,7 @@ AdvancedContentInfo
 
 `AdvancedContentInfo` is a Mindustry java mod library for making out stats and stats categories.
 
-### Example
+### Usage/Examples
 You can initialize your stats and your categories in the setStats method of Block:
 YourBlock.java
 ```java
@@ -71,6 +71,22 @@ public class YourBlock extends Block {
     }
 }
 ```
+You can use index at the end of each .get method to change the position in the stat list or stat category.
+without index:
+```java
+public class GasStats {
+    public static AStat gasCapacity = AStat.get("gasCapacity", AStatCat.get("gasses"));
+}
+```
+![image](https://user-images.githubusercontent.com/58040045/127939116-af61d188-019b-4c08-a782-b478c02fe8e5.png)
+
+with index:
+```java
+public class GasStats {
+    public static AStat gasCapacity = AStat.get("gasCapacity", AStatCat.get("gasses", StatCat.liquids.ordinal()+1));
+}
+```
+![image](https://user-images.githubusercontent.com/58040045/127939214-da6bb475-14d6-4a36-a6bf-1335effe659d.png)
 
 ## Mindustry Mod By Zelaux
 
