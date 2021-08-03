@@ -44,7 +44,6 @@ ext {
     }
 }
 dependencies {
-    compileClasspath fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'commons-io:commons-io:2.5'
 //    compile project(":core")
 //    implementation project(":core")
@@ -188,6 +187,8 @@ jar {
 
     from(rootDir) {
         include "mod.hjson"
+        include "mod.json"
+        include "icon.png"
     }
 
     from("core/assets/") {
