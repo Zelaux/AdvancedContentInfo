@@ -151,7 +151,7 @@ project(":core") {
 }
 configure([":core"].collect{project(it)}){
     java{
-        withJavadocJar()
+//        withJavadocJar()
         withSourcesJar()
     }
 
