@@ -1,7 +1,9 @@
 AdvancedContentInfo
 ========
-
 `AdvancedContentInfo` is a Mindustry java mod library for making out stats and stats categories.
+
+<img width="960" alt="banner1" src="https://user-images.githubusercontent.com/58040045/128066861-741ce790-6048-44bf-9922-2489e35f21bb.png">
+
 
 ### Usage/Examples
 You can initialize your stats and your categories in the setStats method of Block:
