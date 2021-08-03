@@ -1,7 +1,9 @@
 AdvancedContentInfo
 ========
-
 `AdvancedContentInfo` is a Mindustry java mod library for making out stats and stats categories.
+
+<img width="960" alt="banner1" src="https://user-images.githubusercontent.com/58040045/128066861-741ce790-6048-44bf-9922-2489e35f21bb.png">
+
 
 ### Usage/Examples
 You can initialize your stats and your categories in the setStats method of Block:
@@ -72,7 +74,7 @@ public class YourBlock extends Block {
 }
 ```
 You can use index at the end of each .get method to change the position in the stat list or stat category.
-without index:
+Stat category without index:
 ```java
 public class GasStats {
     public static AStat gasCapacity = AStat.get("gasCapacity", AStatCat.get("gasses"));
@@ -80,13 +82,30 @@ public class GasStats {
 ```
 ![image](https://user-images.githubusercontent.com/58040045/127939116-af61d188-019b-4c08-a782-b478c02fe8e5.png)
 
-with index:
+Stat category with index:
 ```java
 public class GasStats {
     public static AStat gasCapacity = AStat.get("gasCapacity", AStatCat.get("gasses", StatCat.liquids.ordinal()+1));
 }
 ```
 ![image](https://user-images.githubusercontent.com/58040045/127939214-da6bb475-14d6-4a36-a6bf-1335effe659d.png)
+
+Stat without index:
+```java
+public class BDStat {
+    public static final AStat rotorsCount=AStat.get("rotorsCount", StatCat.general);
+}
+```
+![image](https://user-images.githubusercontent.com/58040045/128065351-ccda517b-baf8-461b-8974-60305c32faee.png)
+
+Stat with index:
+```java
+public class BDStat {
+    public static final AStat rotorsCount=AStat.get("rotorsCount", StatCat.general, Stat.size.ordinal()+1);
+}
+```
+![image](https://user-images.githubusercontent.com/58040045/128065599-8ff994b2-f9ea-4377-9e59-1392c338b698.png)
+
 
 ## Mindustry Mod By Zelaux
 
