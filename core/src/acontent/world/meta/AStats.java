@@ -165,6 +165,12 @@ public class AStats extends Stats{
         remove(AStat.get(stat));
     }
     public void remove(AStat stat) {
+        for (Stat value : Stat.values()) {
+            if (value.name().equals(stat.name())){
+                super.remove(value);
+                break;
+            }
+        }
         if (aMap == null) {
             aMap = new OrderedMap<>();
         }
