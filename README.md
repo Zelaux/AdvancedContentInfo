@@ -174,7 +174,7 @@ dependencies {
 }
 ```
 
-And don't forget to add the dependency to mod. .(h)json
+And don't forget to add the dependency to your mod.(h)json
 ```hjson
 dependencies: ["advanced-content-info"]
 ```
