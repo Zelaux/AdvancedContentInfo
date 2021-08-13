@@ -186,7 +186,7 @@ Depend via Maven:
 or Gradle:
 ```groovy
 dependencies {
-        implementation 'com.github.Zelaux:AdvancedContentInfo:v1.3'
+        compileOnly 'com.github.Zelaux:AdvancedContentInfo:v1.3'
 }
 ```
 
