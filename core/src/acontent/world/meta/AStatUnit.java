@@ -37,7 +37,12 @@ public class AStatUnit {
     }
 
     public String localized(){
-        if(name.equals(StatUnit.none.name())) return "";
+        if(name().equals(StatUnit.none.name())) return "";
         return Core.bundle.get("unit." + name().toLowerCase(Locale.ROOT));
+    }
+
+    @Override
+    public String toString() {
+        return name();
     }
 }

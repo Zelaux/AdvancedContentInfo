@@ -85,4 +85,8 @@ public class AStat implements Comparable {
         }
         return 0;
     }
+    @Override
+    public String toString() {
+        return name();
+    }
 }
