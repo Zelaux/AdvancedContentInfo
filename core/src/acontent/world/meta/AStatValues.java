@@ -12,7 +12,7 @@ public class AStatValues extends StatValues {
         return number(value,unit);
     }
 
-    private static StatValue number(float value, AStatUnit unit) {
+    public static StatValue number(float value, AStatUnit unit) {
         return table -> {
             int precision = Math.abs((int)value - value) <= 0.001f ? 0 : Math.abs((int)(value * 10) - value * 10) <= 0.001f ? 1 : 2;
 
