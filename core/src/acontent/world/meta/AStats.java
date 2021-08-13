@@ -76,6 +76,9 @@ public class AStats extends Stats{
     public void add(AStat stat, float value, StatUnit unit) {
         this.add(stat, (AStatValues.number(value, unit)));
     }
+    public void add(AStat stat, float value, AStatUnit unit) {
+        this.add(stat, (AStatValues.number(value, unit)));
+    }
 
     public void add(AStat stat, float value) {
         this.add(stat, value, StatUnit.none);
