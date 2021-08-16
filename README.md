@@ -6,6 +6,11 @@ AdvancedContentInfo
 
 
 ### Usage/Examples
+translations are written as for standard categories / stat / units:
+ * ```AStatCat``` - category.lowercaseName
+ * ```AStat``` - stat.lowercaseName
+ * ```AStatUnit``` - category.lowercaseName
+
 You can initialize your stats and your categories in the setStats method of Block:
 YourBlock.java
 ```java
@@ -106,6 +111,17 @@ public class BDStat {
 ```
 ![image](https://user-images.githubusercontent.com/58040045/128065599-8ff994b2-f9ea-4377-9e59-1392c338b698.png)
 
+Also you can made custom StatUnits
+Example:
+```java
+public void setStats(){
+	aStats.add(GasStats.gasCapacity, gasCapacity, AStatUnit.get("gasUnits"));
+}
+```
+Result:
+
+![image](https://user-images.githubusercontent.com/58040045/129361681-b46517f8-bc91-4cd3-a298-7a6845fb9482.png)
+
 
 ## Mindustry Mod By Zelaux
 
@@ -164,13 +180,13 @@ Depend via Maven:
 <dependency>
 	    <groupId>com.github.Zelaux</groupId>
 	    <artifactId>AdvancedContentInfo</artifactId>
-	    <version>v1.2</version>
+	    <version>v1.3</version>
 </dependency>
 ```
 or Gradle:
 ```groovy
 dependencies {
-        implementation 'com.github.Zelaux:AdvancedContentInfo:v1.2'
+        compileOnly 'com.github.Zelaux:AdvancedContentInfo:v1.3'
 }
 ```
 
