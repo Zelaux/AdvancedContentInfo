@@ -4,15 +4,10 @@ import arc.struct.ObjectMap;
 import arc.struct.OrderedMap;
 import arc.struct.Seq;
 import arc.util.Nullable;
-import mindustry.Vars;
 import mindustry.type.Item;
 import mindustry.type.ItemStack;
 import mindustry.type.Liquid;
-import mindustry.world.Block;
-import mindustry.world.blocks.environment.Floor;
 import mindustry.world.meta.*;
-
-import java.util.Iterator;
 
 public class AStats extends Stats{
     @Nullable
@@ -117,26 +112,11 @@ public class AStats extends Stats{
     }
 
     public void add(AStat stat, Attribute attr, boolean floating, float scale, boolean startZero) {
-        Iterator<Block> var6 = Vars.content.blocks().select((blockx) -> {
-            Floor f;
-
-            return blockx instanceof Floor && (f = (Floor)blockx) == blockx && f.attributes.get(attr) != 0.0F && (!f.isLiquid || floating);
-        }).<Block>as().with((s) -> {
-            s.sort((f) -> {
-                return ((Floor)f).attributes.get(attr);
-            });
-        }).iterator();
-
-        while(var6.hasNext()) {
-            Floor block = (Floor)var6.next();
-
-            this.add(stat, ( AStatValues.floorEfficiency(block, block.attributes.get(attr) * scale, startZero)));
-        }
+        add(stat, StatValues.floors(attr, floating, scale, startZero));
 
     }
     @Override
     public void add(Stat stat, Attribute attr, boolean floating, float scale, boolean startZero) {
-        super.add(stat,attr,floating,scale,startZero);
         add(AStat.get(stat),attr,floating,scale,startZero);
 
     }
@@ -150,10 +130,12 @@ public class AStats extends Stats{
     }
 
     public void add(Stat stat, StatValue value) {
-        super.add(stat,value);
         add(AStat.get(stat),value);
     }
     public void add(AStat stat, StatValue value) {
+        if (stat.toStat()!=null){
+            super.add(stat.toStat(),value);
+        }
         if (aMap == null) {
             aMap = new OrderedMap<>();
         }
@@ -168,15 +150,12 @@ public class AStats extends Stats{
 
     @Override
     public void remove(Stat stat) {
-        super.remove(stat);
+//        super.remove(stat);
         remove(AStat.get(stat));
     }
     public void remove(AStat stat) {
-        for (Stat value : Stat.values()) {
-            if (value.name().equals(stat.name())){
-                super.remove(value);
-                break;
-            }
+        if (stat.toStat()!=null){
+            super.remove(stat.toStat());
         }
         if (aMap == null) {
             aMap = new OrderedMap<>();

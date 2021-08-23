@@ -19,6 +19,7 @@ import mindustry.world.meta.StatValue;
 public class AdvancedContentInfoDialog extends ContentInfoDialog {
     public static void init(){
         Vars.ui.content.remove();
+        Vars.ui.content=null;
         Vars.ui.content=new AdvancedContentInfoDialog();
 
     }

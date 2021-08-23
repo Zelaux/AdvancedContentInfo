@@ -4,7 +4,8 @@ import arc.func.Prov;
 import arc.math.Mathf;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
-import mindustry.world.meta.StatCat;
+import arc.util.*;
+import mindustry.world.meta.*;
 
 import java.util.Locale;
 
@@ -20,16 +21,18 @@ public class AStatCat implements Comparable {
         }
     }
 
-    private final Prov<String> nameProvider;
+    public final String name;
+    public final StatCat statCat;
 
     private AStatCat(String name, int index) {
-        nameProvider = () -> name;
+        this.name=name;
 //        statCatMap.put(name, this);
         if (index < 0 || index > allStatCats.size) {
             allStatCats.add(this);
         } else {
             allStatCats.insert(index, this);
         }
+        statCat = Structs.find(StatCat.values(), other->other.name().equals(name()));
     }
 
     public static AStatCat get(StatCat category) {
@@ -47,13 +50,19 @@ public class AStatCat implements Comparable {
     }
 
     public String name() {
-        return nameProvider.get();
+        return name;
     }
 
     public int index() {
         return allStatCats.indexOf(this);
     }
 
+    /**
+     * @return statCat with same name in enum StatCat or null
+     */
+    public StatCat toStatCat(){
+        return statCat;
+    }
     @Override
     public int compareTo(Object o) {
         if (o instanceof AStatCat) {
