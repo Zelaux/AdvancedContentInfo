@@ -9,7 +9,7 @@ AdvancedContentInfo
 translations are written as for standard categories / stat / units:
  * ```AStatCat``` - category.lowercaseName
  * ```AStat``` - stat.lowercaseName
- * ```AStatUnit``` - category.lowercaseName
+ * ```AStatUnit``` - unit.lowercaseName
 
 You can initialize your stats and your categories in the setStats method of Block:
 YourBlock.java
@@ -186,7 +186,7 @@ Depend via Maven:
 or Gradle:
 ```groovy
 dependencies {
-        compileOnly 'com.github.Zelaux:AdvancedContentInfo:v1.3'
+        compileOnly 'com.github.Zelaux:AdvancedContentInfo:v1.4'
 }
 ```
 
