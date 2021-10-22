@@ -175,22 +175,9 @@ gradlew jar  | ./gradlew jar | ./gradlew jar
 Download
 --------
 
-Depend via Maven:
-```xml
-<dependency>
-	    <groupId>com.github.Zelaux</groupId>
-	    <artifactId>AdvancedContentInfo</artifactId>
-	    <version>v1.3</version>
-</dependency>
-```
-or Gradle:
+Depend via Gradle:
 ```groovy
 dependencies {
-        compileOnly 'com.github.Zelaux:AdvancedContentInfo:v1.4'
+        implementation 'com.github.Zelaux:AdvancedContentInfo:v1.4'
 }
-```
-
-And don't forget to add the dependency to your mod.(h)json
-```hjson
-dependencies: ["advanced-content-info"]
 ```
