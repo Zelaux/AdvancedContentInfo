@@ -1,10 +1,23 @@
 buildscript {
     ext {
-//        arcHash='b8db131172548e1f10ba86392e09819c34296711'
-        arcHash = '130'
-        mindustryVersion = 'v130'
-        mindustryVersionAnnotations = 'v126.2'
-        modsDirectory = "classic"
+        arcHash = 'v133'
+        mindustryVersion = 'v133'
+        modsDirectories = [] ;
+        def file=new File(rootDir, "modsDirectories.txt");
+//        println "abs->"+file.getAbsolutePath();
+        if (file.exists()){
+            BufferedReader reader=new BufferedReader(new FileReader(file));
+            reader.lines().forEach(line->modsDirectories.add(line))
+        }
+        String modCoreVersionDemo = null;
+        try {
+//            modCoreVersionDemo = new String(new java.net.URL("https://raw.githubusercontent.com/Zelaux/ZelauxModCore/master/versions/" + mindustryVersion + ".txt").openStream().readAllBytes());
+        } catch (IOException exception) {
+            throw new RuntimeException(exception);
+        }
+        println "core: "+modCoreVersionDemo
+        modCoreVersion = modCoreVersionDemo
+        modCoreVersion = "0ffef85b761"
     }
     repositories {
         mavenLocal()
@@ -15,7 +28,6 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.github.Anuken.Mindustry:annotations:$mindustryVersionAnnotations"
         classpath "com.github.Anuken.Mindustry:core:$mindustryVersion"
         classpath "com.github.Anuken.Mindustry:tools:$mindustryVersion"
         classpath "com.github.Anuken.Arc:arc-core:$mindustryVersion"
@@ -27,39 +39,17 @@ plugins {
     id 'maven-publish'
 }
 version '1.0'
-ext {
-    //the build number that this mod is made for
-    //version of SDK you will be using
-    sdkVersion = '30'
-    sdkRoot = System.getenv("ANDROID_HOME")
-
-    doExec = { cmd ->
-        def proc = cmd.execute(null, new File("$buildDir/libs"))
-        proc.waitForProcessOutput(System.out, System.err)
-    }
-    arcModule = { String name ->
-        //skip to last submodule
-        if (name.contains(':')) name = name.split(':').last()
-        return "com.github.Anuken.Arc:$name:$arcHash"
-    }
-}
-dependencies {
-    implementation 'commons-io:commons-io:2.5'
-//    compile project(":core")
-//    implementation project(":core")
-    implementation arcModule('arc-core')
-    implementation "com.github.Anuken.Mindustry:core:$mindustryVersion"
-    implementation "com.github.Anuken.Mindustry:annotations:$mindustryVersionAnnotations"
-    implementation "com.github.Anuken.Mindustry:tools:$mindustryVersion"
-    implementation 'com.squareup:javapoet:1.12.1'
-
-}
-
-
 allprojects {
-    tasks.withType(JavaCompile) {
-        if (JavaVersion.current() != JavaVersion.VERSION_1_8) {
-            options.compilerArgs.addAll(['--release', '8'])
+    ext{
+        arcModule = { String name ->
+            //skip to last submodule
+            if (name.contains(':')) name = name.split(':').last()
+            return "com.github.Anuken.Arc:$name:$arcHash"
+        }
+        mindustryModule = { String name ->
+            //skip to last submodule
+            if (name.contains(':')) name = name.split(':').last()
+            return "com.github.Anuken.Mindustry:$name:$mindustryVersion"
         }
     }
     apply plugin: 'maven-publish'
@@ -107,10 +97,7 @@ project(":core") {
 
     task preGen {
         outputs.upToDateWhen { false }
-//        generateLocales()
-//        writeVersion()
 //        writeProcessors()
-//        writePlugins()
     }
 
     task copyChangelog {
@@ -119,10 +106,18 @@ project(":core") {
     dependencies {
         compileJava.dependsOn(preGen)
 
-        implementation arcModule("arc-core")
-        implementation "com.github.Anuken.Mindustry:annotations:$mindustryVersionAnnotations"
-        implementation "com.github.Anuken.Mindustry:core:$mindustryVersion"
-        implementation "com.github.Anuken.Mindustry:tools:$mindustryVersion"
+        compileJava.dependsOn(preGen)
+
+        compileOnly "org.lz4:lz4-java:1.7.1"
+        compileOnly arcModule("arc-core")
+        compileOnly arcModule("extensions:flabel")
+        compileOnly arcModule("extensions:freetype")
+        compileOnly arcModule("extensions:g3d")
+        compileOnly arcModule("extensions:fx")
+        compileOnly arcModule("extensions:arcnet")
+
+//        compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
+        compileOnly mindustryModule("core")
 
     }
 
@@ -144,22 +139,33 @@ project(":core") {
         }
     }
     jar {
-        exclude("braindustry/entities/comp/**")
-        exclude("braindustry/entities/compByAnuke/**")
+        exclude("acontent/entities/comp/**")
+        exclude("acontent/entities/compByAnuke/**")
+    }
+}
+project(":tools") {
+    apply plugin: "java"
+
+    dependencies {
+        implementation 'commons-io:commons-io:2.5'
+
+        implementation project(":core")
+        implementation arcModule('arc-core')
+
+//        implementation "com.github.javaparser:javaparser-symbol-solver-core:$jparcerVersion"
+        implementation mindustryModule("core")
+        implementation mindustryModule("tools")
     }
 }
 configure([":core"].collect{project(it)}){
     java{
-//        withJavadocJar()
+        withJavadocJar()
         withSourcesJar()
     }
 
-    publishing{
-        publications{
-            maven(MavenPublication){
-//                groupId="com.github.Zelaux.AdvancedContentInfo"
-//                artifactId="core"
-//                version="0.0.1"
+    publishing {
+        publications {
+            maven(MavenPublication) {
                 from components.java
             }
         }
@@ -170,7 +176,7 @@ task jarAndroid {
 
     doLast {
         //collect dependencies needed for desugaring
-        def files = (configurations.compileClasspath.asList() + configurations.runtimeClasspath.asList() + [new File("$sdkRoot/platforms/android-$sdkVersion/android.jar")])
+        def files = (project(":core").configurations.compileClasspath.asList() + project(":core").configurations.runtimeClasspath.asList() + [new File("$sdkRoot/platforms/android-$sdkVersion/android.jar")])
         def dependencies = files.collect { "--classpath $it.path" }.join(" ")
 
         //dex and desugar files - this requires d8 in your PATH
@@ -181,7 +187,6 @@ jar {
     dependsOn "core:jar"
     archiveFileName = "${project.archivesBaseName}Desktop.jar"
     from {
-//        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
         project(":core").fileTree("build/libs/core.jar").collect { it.isDirectory() ? it : zipTree(it) }
     }
 
@@ -194,9 +199,6 @@ jar {
     from("core/assets/") {
         include "**"
     }
-    doLast {
-//        doExec("python ../../cmp.py")
-    }
 }
 task deploy(type: Jar) {
     dependsOn jarAndroid
@@ -208,27 +210,5 @@ task deploy(type: Jar) {
     doLast {
         delete { delete "$buildDir/libs/${project.archivesBaseName}Desktop.jar" }
         delete { delete "$buildDir/libs/${project.archivesBaseName}Android.jar" }
-    }
-}
-task mjar() {
-    dependsOn "jar"
-    doFirst {
-    }
-    doLast {
-        def intoPath = null
-        if ("classic".equals(modsDirectory)) {
-            intoPath = "${arc.util.OS.getAppDataDirectoryString("Mindustry")}/mods/"
-        } else if (modsDirectory!=null)intoPath=modsDirectory;
-        if (intoPath != null) {
-            delete{
-                delete "${intoPath}/${project.archivesBaseName}Desktop.jar"
-            }
-            copy {
-                from "$buildDir/libs/${project.archivesBaseName}Desktop.jar"
-                into intoPath
-            }
-            def time = LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
-            System.out.println("\tlast build time: ${time}")
-        }
     }
 }

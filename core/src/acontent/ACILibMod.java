@@ -4,7 +4,9 @@ import acontent.ui.AdvancedContentInfoDialog;
 import acontent.world.meta.AStat;
 import acontent.world.meta.AStatCat;
 import acontent.world.meta.AStats;
+import arc.scene.ui.layout.*;
 import mindustry.Vars;
+import mindustry.ctype.*;
 import mindustry.mod.Mod;
 import mindustry.world.Block;
 import mindustry.world.meta.*;
@@ -26,9 +28,15 @@ public class ACILibMod extends Mod {
     public void loadContent() {
         aciInfo = Vars.mods.getMod(this.getClass());
         loaded = true;
-        if (false) {
+        if (true) {
             new Block("test-block"){
-                AStats aStats=new AStats();
+                AStats aStats=new AStats(){
+                    @Override
+                    public void display(Table table){
+                        table.add("Lol");
+                        super.display(table);
+                    }
+                };
                 {
                     stats=aStats.copy(stats);
                     destructible=true;
@@ -42,7 +50,8 @@ public class ACILibMod extends Mod {
                     super.setStats();
                     StatValue yourStatValue = StatValues.number(-1, StatUnit.none);
 
-                    aStats.add(AStat.get("with_index", StatCat.general, Stat.health.ordinal() + 1), yourStatValue);
+                    AStat with_index = AStat.get("with_index", StatCat.general, Stat.health.ordinal() + 1);
+                    aStats.add(with_index, yourStatValue);
                     aStats.add(AStat.get("without_index", StatCat.general), yourStatValue);
                     //StatCat.optional is last StatCat
                     AStatCat preGeneral = AStatCat.get("preGeneral.with_index", StatCat.general.ordinal());

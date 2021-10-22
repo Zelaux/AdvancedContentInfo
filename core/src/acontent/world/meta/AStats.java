@@ -1,9 +1,12 @@
 package acontent.world.meta;
 
+import arc.scene.ui.layout.*;
 import arc.struct.ObjectMap;
 import arc.struct.OrderedMap;
 import arc.struct.Seq;
 import arc.util.Nullable;
+import mindustry.ctype.*;
+import mindustry.graphics.*;
 import mindustry.type.Item;
 import mindustry.type.ItemStack;
 import mindustry.type.Liquid;
@@ -112,7 +115,7 @@ public class AStats extends Stats{
     }
 
     public void add(AStat stat, Attribute attr, boolean floating, float scale, boolean startZero) {
-        add(stat, StatValues.floors(attr, floating, scale, startZero));
+        add(stat, StatValues.blocks(attr, floating, scale, startZero));
 
     }
     @Override
@@ -170,7 +173,7 @@ public class AStats extends Stats{
         }
     }
 
-    public OrderedMap<AStatCat, OrderedMap<AStat, Seq<StatValue>>> toAMap(){
+    public final OrderedMap<AStatCat, OrderedMap<AStat, Seq<StatValue>>> toAMap(){
         if(aMap == null) aMap = new OrderedMap<>();
 
         //sort stats by index if they've been modified
@@ -185,9 +188,37 @@ public class AStats extends Stats{
         return aMap;
     }
 
-    public Stats copy(Stats stats) {
+    public final Stats copy(Stats stats) {
         this.useCategories=stats.useCategories;
         this.intialized=stats.intialized;
         return this;
+    }
+
+    public void display(Table table){
+        for(AStatCat cat : toAMap().keys()){
+            OrderedMap<AStat, Seq<StatValue>> map = toAMap().get(cat);
+
+            if(map.size == 0) continue;
+
+            //TODO check
+            if(useCategories){
+                table.add("@category." + cat.name()).color(Pal.accent).fillX();
+                table.row();
+            }
+
+            for(AStat stat : map.keys()){
+                table.table(inset -> {
+                    inset.left();
+                    inset.add("[lightgray]" + stat.localized() + ":[] ").left().top();
+                    Seq<StatValue> arr = map.get(stat);
+                    for(StatValue value : arr){
+                        value.display(inset);
+                        inset.add().size(10f);
+                    }
+
+                }).fillX().padLeft(10);
+                table.row();
+            }
+        }
     }
 }

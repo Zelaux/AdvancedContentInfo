@@ -1,0 +1,31 @@
+
+apply plugin: "java"
+sourceSets.main.java.srcDirs = ["src/"]
+
+
+import arc.files.Fi
+import arc.graphics.Color
+import arc.graphics.Pixmap
+import arc.packer.TexturePacker
+import arc.struct.IntIntMap
+import arc.struct.IntMap
+import arc.util.async.Threads
+
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
+
+task updateMindustryVersion (dependsOn: [classes, configurations.runtimeClasspath], type: JavaExec) {
+    maxHeapSize = "4048m"
+    args("-Xmx4048m", "--enable-preview", mindustryVersion)
+    main = "mma.tools.updateVersion.MindustryVersionUpdater"
+    classpath = sourceSets.main.runtimeClasspath
+    workingDir = "../"
+}
+task checkJitPack(dependsOn: [classes, configurations.runtimeClasspath], type: JavaExec){
+    maxHeapSize = "4048m"
+    args("-Xmx4048m", "--enable-preview", mindustryVersion)
+    main = "mma.tools.VersionsFileUpdater"
+    classpath = sourceSets.main.runtimeClasspath
+    workingDir = "../"
+}
