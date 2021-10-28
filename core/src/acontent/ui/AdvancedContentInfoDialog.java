@@ -1,41 +1,37 @@
 package acontent.ui;
 
-import acontent.world.meta.AStat;
-import arc.scene.ui.ScrollPane;
-import arc.scene.ui.layout.Table;
-import arc.struct.OrderedMap;
-import arc.struct.Seq;
+import acontent.world.meta.*;
+import arc.scene.ui.*;
+import arc.scene.ui.layout.*;
 import arc.util.*;
-import acontent.world.meta.AStatCat;
-import acontent.world.meta.AStats;
-import mindustry.Vars;
-import mindustry.ctype.UnlockableContent;
-import mindustry.graphics.Pal;
-//import mindustry.ui.Cicon;
-import mindustry.ui.dialogs.ContentInfoDialog;
-import mindustry.world.meta.*;
+import mindustry.*;
+import mindustry.ctype.*;
+import mindustry.graphics.*;
+import mindustry.ui.dialogs.*;
 
 import static mindustry.Vars.iconXLarge;
 
-public class AdvancedContentInfoDialog extends ContentInfoDialog {
-    final         ContentInfoDialog parent;
-    public static void init(){
-        Vars.ui.content.remove();
-        ContentInfoDialog parent = Vars.ui.content;
-        Log.info("parent: @",parent.getClass());
-        Vars.ui.content=null;
-        Vars.ui.content=new AdvancedContentInfoDialog(parent);
+public class AdvancedContentInfoDialog extends ContentInfoDialog{
+    final ContentInfoDialog parent;
 
-    }
-    private AdvancedContentInfoDialog(ContentInfoDialog parent) {
+    private AdvancedContentInfoDialog(ContentInfoDialog parent){
         super();
         this.parent = parent;
     }
 
+    public static void init(){
+        if (Vars.headless)return;
+        Vars.ui.content.remove();
+        ContentInfoDialog parent = Vars.ui.content;
+        Vars.ui.content = null;
+        Vars.ui.content = new AdvancedContentInfoDialog(parent);
+
+    }
+
     @Override
-    public void show(UnlockableContent content) {
+    public void show(UnlockableContent content){
         boolean useAStats = content.stats instanceof AStats;
-        if (!useAStats) {
+        if(!useAStats){
             parent.show(content);
             return;
         }
