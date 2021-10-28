@@ -175,9 +175,9 @@ gradlew jar  | ./gradlew jar | ./gradlew jar
 Download
 --------
 
-Depend via Gradle:
+Depend via Gradle(Replace COMMIT_HASH with text from [this file](versions/lastVersion.txt)):
 ```groovy
 dependencies {
-        implementation 'com.github.Zelaux:AdvancedContentInfo:v1.4'
+        implementation 'com.github.Zelaux:AdvancedContentInfo:COMMIT_HASH'
 }
 ```
