@@ -31,6 +31,7 @@ public class VersionsFileUpdater {
         String version = result.substring(0, 11);
         Log.info("result(@), version(@)",result, version);
         versions.child(gameVersion + ".txt").writeString(version);
+        versions.child("lastVersion.txt").writeString(version);
         try {
             new URL("https://jitpack.io/com/github/Zelaux/AdvancedContentInfo/" +version + "/build.log").openStream();
         } catch (ConnectException exception) {
