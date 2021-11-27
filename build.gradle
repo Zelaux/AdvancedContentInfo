@@ -1,7 +1,7 @@
 buildscript {
     ext {
-        arcHash = 'v133'
-        mindustryVersion = 'v133'
+        arcHash = 'v135'
+        mindustryVersion = 'v135'
         modsDirectories = [] ;
         def file=new File(rootDir, "modsDirectories.txt");
 //        println "abs->"+file.getAbsolutePath();
@@ -9,15 +9,7 @@ buildscript {
             BufferedReader reader=new BufferedReader(new FileReader(file));
             reader.lines().forEach(line->modsDirectories.add(line))
         }
-        String modCoreVersionDemo = null;
-        try {
-//            modCoreVersionDemo = new String(new java.net.URL("https://raw.githubusercontent.com/Zelaux/ZelauxModCore/master/versions/" + mindustryVersion + ".txt").openStream().readAllBytes());
-        } catch (IOException exception) {
-            throw new RuntimeException(exception);
-        }
-        println "core: "+modCoreVersionDemo
-        modCoreVersion = modCoreVersionDemo
-        modCoreVersion = "0ffef85b761"
+        modCoreVersion = "f3028a8d038"
     }
     repositories {
         mavenLocal()
