@@ -227,7 +227,7 @@ jar {
     }
 }
 task deploy(type: Jar) {
-//    dependsOn jarAndroid
+    dependsOn jarAndroid
     dependsOn jar
     archiveFileName = "${project.archivesBaseName}.jar"
 
