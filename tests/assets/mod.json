@@ -1,0 +1,6 @@
+{
+  "name": "test-aci",
+  "displayName": "TestAdvancedContentInfo",
+  "main": "acontent.TestMod",
+  "minGameVersion":"135"
+}

@@ -1,7 +1,6 @@
 package acontent.world.meta;
 
 import arc.*;
-import arc.func.*;
 import arc.math.*;
 import arc.struct.*;
 import arc.util.*;
@@ -24,14 +23,14 @@ public class AStat implements Comparable{
     public final Stat stat;
 
     private AStat(String name, AStatCat category, int index){
-        this.name=name;
+        this.name = name;
         this.category = category;
         if(index < 0 || index > allStats.size){
             allStats.add(this);
         }else{
             allStats.insert(index, this);
         }
-        stat= Structs.find(Stat.values(),other->other.name().equals(name()));
+        stat = Structs.find(Stat.values(), other -> other.name().equals(name()));
     }
 
     public static Seq<AStat> getAllStats(){
@@ -40,6 +39,19 @@ public class AStat implements Comparable{
 
     public static AStat get(String name, AStatCat category, int index){
         return statMap.get(name.toLowerCase(Locale.ROOT), () -> new AStat(name, category, index));
+    }
+
+
+    public static AStat get(String name, AStatCat category, Stat nearby){
+        return get(name, category, nearby, Offset.defaultOffset);
+    }
+
+    public static AStat get(String name, AStatCat category, Stat nearby, Offset offset){
+        return get(name, category, get(nearby), offset);
+    }
+
+    public static AStat get(String name, AStatCat category, AStat nearby, Offset offset){
+        return get(name, category, offset.calculateIndex(nearby.index()));
     }
 
     public static AStat get(String name, AStatCat category){
@@ -66,6 +78,22 @@ public class AStat implements Comparable{
         return get(name, category.name(), index);
     }
 
+    public static AStat get(String name, StatCat category, Stat nearby){
+        return get(name, category, get(nearby));
+    }
+
+    public static AStat get(String name, StatCat category, AStat nearby){
+        return get(name, category, nearby, Offset.defaultOffset);
+    }
+
+    public static AStat get(String name, StatCat category, Stat nearby, Offset offset){
+        return get(name, category, get(nearby), offset);
+    }
+
+    public static AStat get(String name, StatCat category, AStat nearby, Offset offset){
+        return get(name, category, offset.calculateIndex(nearby.index()));
+    }
+
     public String name(){
         return name;
     }
@@ -85,6 +113,7 @@ public class AStat implements Comparable{
     public Stat toStat(){
         return stat;
     }
+
     @Override
     public int compareTo(Object o){
         if(o instanceof AStat){

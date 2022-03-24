@@ -1,6 +1,5 @@
 package acontent.world.meta;
 
-import arc.func.Prov;
 import arc.math.Mathf;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
@@ -48,6 +47,20 @@ public class AStatCat implements Comparable {
     public static AStatCat get(String category,int index) {
         return statCatMap.get(category.toLowerCase(Locale.ROOT), () -> new AStatCat(category,index));
     }
+    public static AStatCat get(String category,StatCat nearby) {
+        return get(category,nearby, Offset.defaultOffset);
+    }
+    public static AStatCat get(String category, StatCat nearby, Offset offset) {
+        return get(category,get(nearby),offset);
+    }
+
+    public static AStatCat get(String category,AStatCat nearby) {
+        return get(category,nearby, Offset.defaultOffset);
+    }
+    public static AStatCat get(String category, AStatCat nearby, Offset offset) {
+        return get(category,offset.calculateIndex(nearby.index()));
+    }
+
 
     public String name() {
         return name;

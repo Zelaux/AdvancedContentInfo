@@ -1,0 +1,87 @@
+buildscript {
+    ext {
+        arcHash = 'v135'
+        mindustryVersion = 'v135'
+        modCoreVersion = "f3028a8d038"
+    }
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        google()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url 'https://jitpack.io' }
+    }
+
+    dependencies {
+        classpath "com.github.Anuken.Mindustry:core:$mindustryVersion"
+        classpath "com.github.Anuken.Mindustry:tools:$mindustryVersion"
+        classpath "com.github.Anuken.Arc:arc-core:$mindustryVersion"
+        classpath "com.github.Anuken.Arc:packer:$arcHash"
+    }
+}
+plugins {
+    id 'java'
+    id 'maven-publish'
+}
+version '1.0'
+//needed for android build
+
+tasks.withType(JavaCompile) {
+    if (JavaVersion.current() != JavaVersion.VERSION_1_8) {
+        options.compilerArgs.addAll(['--release', '8'])
+    }
+    sourceCompatibility = 8
+    targetCompatibility = 8
+    doFirst {
+//            options.compilerArgs = options.compilerArgs.findAll { it != '--enable-preview' }
+    }
+}
+
+tasks.withType(Javadoc) {
+    options {
+//            addStringOption('Xdoclint:none', '-quiet')
+        addStringOption('-release', '8')
+    }
+}
+apply plugin: "java-library"
+
+compileJava.options.fork = true
+
+
+afterEvaluate {
+    task mergedJavadoc(type: Javadoc) {
+
+        source rootProject.subprojects.collect { project ->
+            if (project.hasProperty("sourceSets")) {
+                return project.sourceSets.main.allJava
+            }
+        }
+
+        classpath = files(rootProject.subprojects.collect { project ->
+            if (project.hasProperty("sourceSets")) {
+                return project.sourceSets.main.compileClasspath
+            }
+        })
+        destinationDir = new File(buildDir, 'javadoc')
+    }
+}
+project.archivesBaseName="AdvancedContentInfoTestMod.jar"
+jar{
+    dependsOn(":core:jar")
+    archiveFileName = "${project.archivesBaseName}."
+    from {
+        project(":core").fileTree("build/libs/core.jar").collect { it.isDirectory() ? it : zipTree(it) }
+    }
+
+    from(rootDir) {
+        include "mod.hjson"
+        include "mod.json"
+        include "icon.png"
+    }
+
+    from("core/assets/") {
+        include "**"
+    }
+}
+sourceSets.main.java.srcDirs = ["src/", "$buildDir/generated/sources/annotationProcessor/java/main"]
+sourceSets.main.resources.srcDirs = ["assets/"]

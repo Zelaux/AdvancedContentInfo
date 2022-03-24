@@ -1,3 +1,5 @@
+import java.time.format.DateTimeFormatter
+
 buildscript {
     ext {
         arcHash = 'v135'
@@ -147,6 +149,26 @@ project(":core") {
         exclude("acontent/entities/compByAnuke/**")
     }
 }
+project(":tests"){
+    apply plugin: "java-library"
+
+    compileJava.options.fork = true
+
+    dependencies {
+        implementation project(":core")
+
+        compileOnly "org.lz4:lz4-java:1.7.1"
+        compileOnly arcModule("arc-core")
+        compileOnly arcModule("extensions:flabel")
+        compileOnly arcModule("extensions:freetype")
+        compileOnly arcModule("extensions:g3d")
+        compileOnly arcModule("extensions:fx")
+        compileOnly arcModule("extensions:arcnet")
+
+//        compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
+        compileOnly mindustryModule("core")
+    }
+}
 project(":tools") {
     apply plugin: "java"
 
@@ -204,15 +226,67 @@ jar {
         include "**"
     }
 }
-task deploy(type: Jar) {
-    dependsOn jarAndroid
-    dependsOn jar
-    archiveFileName = "${project.archivesBaseName}.jar"
 
-    from { [zipTree("$buildDir/libs/${project.archivesBaseName}Desktop.jar"), zipTree("$buildDir/libs/${project.archivesBaseName}Android.jar")] }
-
-    doLast {
-        delete { delete "$buildDir/libs/${project.archivesBaseName}Desktop.jar" }
-        delete { delete "$buildDir/libs/${project.archivesBaseName}Android.jar" }
+task mjar(){
+    dependsOn "core:jar"
+    dependsOn "tests:jar"
+    ext{
+        acopy = { String intoPath ->
+            def project=project(":tests");
+            delete{
+                delete "${intoPath}/${project.archivesBaseName}"
+            }
+            copy{
+                from "$buildDir/../tests/build/libs/${project.archivesBaseName}"
+                into intoPath
+            }
+           // println "$buildDir/../tests/build/libs/${project.archivesBaseName}.jar"
+            println "Moved to ${intoPath}"
+        }
     }
+    doLast{
+        def modsDirectories = [];
+        def file = new File(rootDir, "modsDirectories.txt");
+
+        if (file.exists()) {
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            reader.lines().forEach(line -> modsDirectories.add(line))
+            reader.close();
+        } else {
+            modsDirectories.add("classic");
+        }
+        for (String directory : modsDirectories) {
+            if (directory.equals("classic")) {
+                directory = getdatadir() + "mods";
+            }
+//            println "directory: "+directory
+            acopy(directory);
+        }
+        def time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
+        println "Build ended at: ${time}"
+    }
+}
+def os() { //Returns OS name
+    String s = System.getProperty("os.name");
+    return s == null ? "" : s;
+}
+
+def getdatadir() { //Returns Mindustry data directory path
+    def ret = System.getenv("MINDUSTRY_DATA_DIR")
+    if (ret == null) {
+        def os = os()
+        if (os.contains("Windows")) {
+            return System.getenv("AppData") + "\\Mindustry\\"
+        } else if (os.contains("Linux") || os.contains("BSD")) {
+            if (System.getenv("XDG_DATA_HOME") != null) {
+                String dir = System.getenv("XDG_DATA_HOME")
+                if (!dir.endsWith("/")) dir += "/"
+                return dir + "Mindustry/"
+            }
+            return System.getProperty("user.home") + "/.local/share/Mindustry/"
+        } else if (os.contains("Mac")) {
+            return System.getProperty("user.home") + "/Library/Application Support/Mindustry/";
+        }
+    }
+    return ret
 }
