@@ -24,10 +24,11 @@ public class VersionsFileUpdater {
         if (result.matches("[\"].*[\"]")){
             result=result.substring(1,result.length()-1);
         }
-        String gameVersion = Structs.find(args, v -> v.startsWith("v"));
+        String gameVersion = Structs.find(args, v -> v.startsWith("v_"));
         if (gameVersion == null) {
             throw new RuntimeException("cannot find gameVersion from " + Arrays.toString(args));
         }
+        gameVersion=gameVersion.substring("v_".length());
         String version = result.substring(0, 11);
         Log.info("result(@), version(@)",result, version);
         versions.child(gameVersion + ".txt").writeString(version);
