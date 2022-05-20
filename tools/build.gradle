@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit
 task checkJitPack(dependsOn: [classes, configurations.runtimeClasspath], type: JavaExec){
     maxHeapSize = "4048m"
     args("-Xmx4048m", "--enable-preview", "v_$mindustryVersion")
-    main = "mma.tools.VersionsFileUpdater"
+    main = "acontent.tools.VersionsFileUpdater"
     classpath = sourceSets.main.runtimeClasspath
     workingDir = "../"
 }

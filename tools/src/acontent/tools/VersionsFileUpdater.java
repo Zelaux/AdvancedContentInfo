@@ -28,9 +28,6 @@ public class VersionsFileUpdater {
         String gameVersion = Structs.find(args, v -> v.startsWith("v_"));
         if (gameVersion == null) {
             throw new RuntimeException("cannot find gameVersion from " + Arrays.toString(args));
-        }else{
-            if (true)
-                throw new RuntimeException("cannot find gameVersion from " + Arrays.toString(args));
         }
         gameVersion=gameVersion.substring("v_".length());
         String version = result.substring(0, 11);
