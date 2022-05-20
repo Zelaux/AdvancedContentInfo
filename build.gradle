@@ -11,14 +11,11 @@ buildscript {
         arcVersion = "ef9d6ac655"
 //        arcVersion = "916c5a77"
 
-        jgitVersion = "3.5.0.201409260305-r"
-
-
         // normal
         //mindustryPath = "com.github.Anuken.Mindustry"
         //mindustryVersion = 'v135'
         //arcVersion=mindustryVersion
-        modCoreVersion = "f3028a8d038"
+        modCoreVersion = "0de85153189"
     }
     repositories {
         mavenLocal()

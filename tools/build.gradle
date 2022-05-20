@@ -15,16 +15,16 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-task updateMindustryVersion (dependsOn: [classes, configurations.runtimeClasspath], type: JavaExec) {
+/*task updateMindustryVersion (dependsOn: [classes, configurations.runtimeClasspath], type: JavaExec) {
     maxHeapSize = "4048m"
     args("-Xmx4048m", "--enable-preview", mindustryVersion)
     main = "mma.tools.updateVersion.MindustryVersionUpdater"
     classpath = sourceSets.main.runtimeClasspath
     workingDir = "../"
-}
+}*/
 task checkJitPack(dependsOn: [classes, configurations.runtimeClasspath], type: JavaExec){
     maxHeapSize = "4048m"
-    args("-Xmx4048m", "--enable-preview", mindustryVersion)
+    args("-Xmx4048m", "--enable-preview", "v_$mindustryVersion")
     main = "mma.tools.VersionsFileUpdater"
     classpath = sourceSets.main.runtimeClasspath
     workingDir = "../"

@@ -1,4 +1,4 @@
-package mma.tools;
+package acontent.tools;
 
 import arc.files.Fi;
 import arc.util.Log;
@@ -16,6 +16,7 @@ public class VersionsFileUpdater {
     public static void main(String[] args)  throws Exception{
         Fi versions = Fi.get("versions");
 
+
         Process proc = Runtime.getRuntime().exec("git log --pretty=format:\"%H:%s\" -1");
         proc.waitFor();
 
@@ -27,6 +28,9 @@ public class VersionsFileUpdater {
         String gameVersion = Structs.find(args, v -> v.startsWith("v_"));
         if (gameVersion == null) {
             throw new RuntimeException("cannot find gameVersion from " + Arrays.toString(args));
+        }else{
+            if (true)
+                throw new RuntimeException("cannot find gameVersion from " + Arrays.toString(args));
         }
         gameVersion=gameVersion.substring("v_".length());
         String version = result.substring(0, 11);
