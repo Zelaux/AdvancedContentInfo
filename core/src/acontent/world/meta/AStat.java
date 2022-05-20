@@ -1,19 +1,30 @@
 package acontent.world.meta;
 
 import arc.*;
-import arc.math.*;
 import arc.struct.*;
 import arc.util.*;
 import mindustry.world.meta.*;
 
+import java.lang.reflect.*;
 import java.util.*;
 
-public class AStat implements Comparable{
+public class AStat implements Comparable<AStat>{
     private static final ObjectMap<String, AStat> statMap = new ObjectMap<>();
     private static final Seq<AStat> allStats = new Seq<>();
 
+    private static final Stat[] rootValues;
+
     static{
-        for(Stat value : Stat.values()){
+        Seq<Stat> values = new Seq<>();
+        for(Field field : Stat.class.getFields()){
+            if(!Modifier.isPublic(field.getModifiers()) &&
+            !Modifier.isStatic(field.getModifiers()) &&
+            !Modifier.isFinal(field.getModifiers())) continue;
+            if(field.getType() != Stat.class) continue;
+            values.add(Reflect.<Stat>get(field));
+        }
+        rootValues = values.toArray(Stat.class);
+        for(Stat value : rootValues){
             get(value);
         }
     }
@@ -21,6 +32,7 @@ public class AStat implements Comparable{
     public final AStatCat category;
     public final String name;
     public final Stat stat;
+    public final boolean mindustryCopy;
 
     private AStat(String name, AStatCat category, int index){
         this.name = name;
@@ -30,7 +42,13 @@ public class AStat implements Comparable{
         }else{
             allStats.insert(index, this);
         }
-        stat = Structs.find(Stat.values(), other -> other.name().equals(name()));
+        Stat rootStat = Stat.all.find(cat -> cat.name.equals(name));
+        if(rootStat == null){
+            stat = new Stat(name, category.statCat);
+        }else{
+            stat = rootStat;
+        }
+        mindustryCopy = Structs.contains(rootValues, other -> other.name.equals(name()));
     }
 
     public static Seq<AStat> getAllStats(){
@@ -67,15 +85,15 @@ public class AStat implements Comparable{
     }
 
     public static AStat get(Stat stat){
-        return get(stat.name(), stat.category, stat.ordinal());
+        return get(stat.name, stat.category, stat.id);
     }
 
     public static AStat get(String name, StatCat category){
-        return get(name, category.name());
+        return get(name, category.name);
     }
 
     public static AStat get(String name, StatCat category, int index){
-        return get(name, category.name(), index);
+        return get(name, category.name, index);
     }
 
     public static AStat get(String name, StatCat category, Stat nearby){
@@ -115,16 +133,12 @@ public class AStat implements Comparable{
     }
 
     @Override
-    public int compareTo(Object o){
-        if(o instanceof AStat){
-            AStat other = (AStat)o;
-            return Mathf.clamp(index() - other.index(), -1, 1);
-        }
-        return 0;
+    public String toString(){
+        return name();
     }
 
     @Override
-    public String toString(){
-        return name();
+    public int compareTo(AStat o){
+        return index() - o.index();
     }
 }

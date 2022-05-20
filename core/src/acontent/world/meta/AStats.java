@@ -24,10 +24,6 @@ public class AStats extends Stats{
         this.add(stat, (AStatValues.number (value, unit)));
     }
 
-    public void add(Stat stat, float value, AStatUnit unit) {
-        this.add(stat, (AStatValues.number (value, unit)));
-    }
-
     @Override
     public void add(Stat stat, float value) {
         this.add(stat, value, StatUnit.none);
@@ -72,9 +68,6 @@ public class AStats extends Stats{
         this.add(stat, attr, floating, 1.0F, false);
     }
     public void add(AStat stat, float value, StatUnit unit) {
-        this.add(stat, (AStatValues.number(value, unit)));
-    }
-    public void add(AStat stat, float value, AStatUnit unit) {
         this.add(stat, (AStatValues.number(value, unit)));
     }
 

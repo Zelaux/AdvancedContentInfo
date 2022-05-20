@@ -6,7 +6,7 @@ import mindustry.world.meta.StatValue;
 import mindustry.world.meta.StatValues;
 
 public class AStatValues extends StatValues {
-
+/*
     public static StatValue number(float value, StatUnit statUnit){
         AStatUnit unit=AStatUnit.get(statUnit);
         return number(value,unit);
@@ -19,5 +19,5 @@ public class AStatValues extends StatValues {
             table.add(Strings.fixed(value, precision));
             table.add((unit.space ? " " : "") + unit.localized());
         };
-    }
+    }*/
 }
