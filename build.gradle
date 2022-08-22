@@ -5,17 +5,16 @@ buildscript {
 //        arcVersion = 'v135'
 //        mindustryVersion = 'v135'
 
-        mindustryPath = "com.github.Anuken.MindustryJitpack"
-        mindustryVersionFull = '68f053f409c999f0a66bc6ac30760c331b2c0d6c'
-        mindustryVersion = '68f053f409'
-        arcVersion = "ef9d6ac655"
+        mindustryPath = "com.github.Anuken.Mindustry"
+        mindustryVersionFull = 'v137'
+        mindustryVersion = mindustryVersionFull
+        arcVersion = mindustryVersion
 //        arcVersion = "916c5a77"
 
         // normal
         //mindustryPath = "com.github.Anuken.Mindustry"
         //mindustryVersion = 'v135'
         //arcVersion=mindustryVersion
-        modCoreVersion = "0de85153189"
     }
     repositories {
         mavenLocal()
@@ -27,7 +26,7 @@ buildscript {
 
     dependencies {
         classpath "$mindustryPath:core:$mindustryVersion"
-        classpath "com.github.Anuken.Mindustry:tools:v135"//classpath "com.github.Anuken.Mindustry:tools:$mindustryVersion"
+//        classpath "com.github.Anuken.Mindustry:tools:v135"//classpath "com.github.Anuken.Mindustry:tools:$mindustryVersion"
         classpath "com.github.Anuken.Arc:arc-core:$arcVersion"
         classpath "com.github.Anuken.Arc:packer:$arcVersion"
     }
@@ -121,8 +120,6 @@ project(":core") {
     dependencies {
         compileJava.dependsOn(preGen)
 
-        compileJava.dependsOn(preGen)
-
         compileOnly "org.lz4:lz4-java:1.7.1"
         compileOnly arcModule("arc-core")
         compileOnly arcModule("extensions:flabel")
@@ -156,26 +153,6 @@ project(":core") {
     jar {
         exclude("acontent/entities/comp/**")
         exclude("acontent/entities/compByAnuke/**")
-    }
-}
-project(":tests"){
-    apply plugin: "java-library"
-
-    compileJava.options.fork = true
-
-    dependencies {
-        implementation project(":core")
-
-        compileOnly "org.lz4:lz4-java:1.7.1"
-        compileOnly arcModule("arc-core")
-        compileOnly arcModule("extensions:flabel")
-        compileOnly arcModule("extensions:freetype")
-        compileOnly arcModule("extensions:g3d")
-        compileOnly arcModule("extensions:fx")
-        compileOnly arcModule("extensions:arcnet")
-
-//        compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
-        compileOnly mindustryModule("core")
     }
 }
 project(":tools") {

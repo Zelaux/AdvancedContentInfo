@@ -1,44 +1,42 @@
-buildscript {
-    ext {
-        arcHash = 'v135'
-        mindustryVersion = 'v135'
-        modCoreVersion = "f3028a8d038"
+buildscript{
+    ext{
+        modCoreVersion = "72b85a0ea32"
     }
-    repositories {
+    repositories{
         mavenLocal()
         mavenCentral()
         google()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        maven { url 'https://jitpack.io' }
+        maven{ url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven{ url 'https://jitpack.io' }
     }
 
-    dependencies {
+    dependencies{/*
         classpath "com.github.Anuken.Mindustry:core:$mindustryVersion"
         classpath "com.github.Anuken.Mindustry:tools:$mindustryVersion"
         classpath "com.github.Anuken.Arc:arc-core:$mindustryVersion"
-        classpath "com.github.Anuken.Arc:packer:$arcHash"
+        classpath "com.github.Anuken.Arc:packer:$arcHash"*/
     }
 }
-plugins {
+plugins{
     id 'java'
     id 'maven-publish'
 }
 version '1.0'
 //needed for android build
 
-tasks.withType(JavaCompile) {
-    if (JavaVersion.current() != JavaVersion.VERSION_1_8) {
+tasks.withType(JavaCompile){
+    if(JavaVersion.current() != JavaVersion.VERSION_1_8){
         options.compilerArgs.addAll(['--release', '8'])
     }
     sourceCompatibility = 8
     targetCompatibility = 8
-    doFirst {
+    doFirst{
 //            options.compilerArgs = options.compilerArgs.findAll { it != '--enable-preview' }
     }
 }
 
-tasks.withType(Javadoc) {
-    options {
+tasks.withType(Javadoc){
+    options{
 //            addStringOption('Xdoclint:none', '-quiet')
         addStringOption('-release', '8')
     }
@@ -47,39 +45,56 @@ apply plugin: "java-library"
 
 compileJava.options.fork = true
 
+dependencies{
+    implementation project(":core")
 
-afterEvaluate {
-    task mergedJavadoc(type: Javadoc) {
+    compileOnly "org.lz4:lz4-java:1.7.1"
+    compileOnly arcModule("arc-core")
+    compileOnly arcModule("extensions:flabel")
+    compileOnly arcModule("extensions:freetype")
+    compileOnly arcModule("extensions:g3d")
+    compileOnly arcModule("extensions:fx")
+    compileOnly arcModule("extensions:arcnet")
 
-        source rootProject.subprojects.collect { project ->
-            if (project.hasProperty("sourceSets")) {
+//        compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
+    annotationProcessor("com.github.Zelaux.ZelauxModCore:annotations:$modCoreVersion")
+    compileOnly "com.github.Zelaux.ZelauxModCore:annotations:$modCoreVersion"
+    compileOnly mindustryModule("core")
+}
+
+
+afterEvaluate{
+    task mergedJavadoc(type: Javadoc){
+
+        source rootProject.subprojects.collect{ project ->
+            if(project.hasProperty("sourceSets")){
                 return project.sourceSets.main.allJava
             }
         }
 
-        classpath = files(rootProject.subprojects.collect { project ->
-            if (project.hasProperty("sourceSets")) {
+        classpath = files(rootProject.subprojects.collect{ project ->
+            if(project.hasProperty("sourceSets")){
                 return project.sourceSets.main.compileClasspath
             }
         })
         destinationDir = new File(buildDir, 'javadoc')
     }
 }
-project.archivesBaseName="AdvancedContentInfoTestMod.jar"
+project.archivesBaseName = "AdvancedContentInfoTestMod.jar"
 jar{
     dependsOn(":core:jar")
     archiveFileName = "${project.archivesBaseName}."
-    from {
-        project(":core").fileTree("build/libs/core.jar").collect { it.isDirectory() ? it : zipTree(it) }
+    from{
+        project(":core").fileTree("build/libs/core.jar").collect{ it.isDirectory() ? it : zipTree(it) }
     }
 
-    from(rootDir) {
+    from(rootDir){
         include "mod.hjson"
         include "mod.json"
         include "icon.png"
     }
 
-    from("core/assets/") {
+    from("core/assets/"){
         include "**"
     }
 }

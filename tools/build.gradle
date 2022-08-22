@@ -9,7 +9,7 @@ import arc.graphics.Pixmap
 import arc.packer.TexturePacker
 import arc.struct.IntIntMap
 import arc.struct.IntMap
-import arc.util.async.Threads
+import arc.util.Threads
 
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
