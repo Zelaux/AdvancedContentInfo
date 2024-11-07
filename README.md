@@ -175,9 +175,14 @@ gradlew jar  | ./gradlew jar | ./gradlew jar
 Download
 --------
 
-Depend via Gradle(Replace COMMIT_HASH with text from [this file](versions/lastVersion.txt)):
+Depend via Gradle:
 ```groovy
+repositories{
+    maven{ url 'https://raw.githubusercontent.com/Zelaux/Repo/master/repository' }
+    maven{ url 'https://raw.githubusercontent.com/Anuken/MindustryMaven/master/repository' }
+}
+
 dependencies {
-        implementation 'com.github.Zelaux:AdvancedContentInfo:COMMIT_HASH'
+    implementation 'com.github.Zelaux.AdvancedContentInfo:core:v1.5.0'
 }
 ```
