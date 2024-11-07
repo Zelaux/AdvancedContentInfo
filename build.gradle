@@ -2,30 +2,17 @@ import java.time.format.DateTimeFormatter
 
 buildscript {
     ext {
-//        arcVersion = 'v135'
-//        mindustryVersion = 'v135'
-
-        mindustryPath = "com.github.Anuken.Mindustry"
-        mindustryVersionFull = 'v137'
-        mindustryVersion = mindustryVersionFull
-        arcVersion = mindustryVersion
-//        arcVersion = "916c5a77"
-
-        // normal
-        //mindustryPath = "com.github.Anuken.Mindustry"
-        //mindustryVersion = 'v135'
-        //arcVersion=mindustryVersion
     }
     repositories {
         mavenLocal()
         mavenCentral()
         google()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        maven { url 'https://jitpack.io' }
+        maven{ url 'https://raw.githubusercontent.com/Zelaux/MindustryRepo/master/repository' }
     }
 
     dependencies {
-        classpath "$mindustryPath:core:$mindustryVersion"
+        classpath "com.github.Anuken.Mindustry:core:$mindustryVersion"
 //        classpath "com.github.Anuken.Mindustry:tools:v135"//classpath "com.github.Anuken.Mindustry:tools:$mindustryVersion"
         classpath "com.github.Anuken.Arc:arc-core:$arcVersion"
         classpath "com.github.Anuken.Arc:packer:$arcVersion"
@@ -46,12 +33,7 @@ allprojects {
         mindustryModule = { String name ->
             //skip to last submodule
             if (name.contains(':')) name = name.split(':').last()
-            return "$mindustryPath:$name:$mindustryVersion"
-        }
-        mindustryOldModule = { String name ->
-            //skip to last submodule
-            if (name.contains(':')) name = name.split(':').last()
-            return "com.github.Anuken.Mindustry:$name:v135"
+            return "com.github.Anuken.Mindustry:$name:$mindustryVersion"
         }
     }
     apply plugin: 'maven-publish'
@@ -61,7 +43,8 @@ allprojects {
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
-        maven { url 'https://jitpack.io' }
+        maven{ url 'https://raw.githubusercontent.com/Zelaux/MindustryRepo/master/repository' }
+        maven{ url 'https://raw.githubusercontent.com/Zelaux/Repo/master/repository' }
         jcenter()
     }
     tasks.withType(JavaCompile) {
@@ -166,7 +149,6 @@ project(":tools") {
 
 //        implementation "com.github.javaparser:javaparser-symbol-solver-core:$jparcerVersion"
         implementation mindustryModule("core")
-        implementation mindustryOldModule("tools")
     }
 }
 configure([":core"].collect{project(it)}){

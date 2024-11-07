@@ -1,6 +1,6 @@
 buildscript{
     ext{
-        modCoreVersion = "72b85a0ea32"
+
     }
     repositories{
         mavenLocal()
@@ -8,13 +8,6 @@ buildscript{
         google()
         maven{ url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven{ url 'https://jitpack.io' }
-    }
-
-    dependencies{/*
-        classpath "com.github.Anuken.Mindustry:core:$mindustryVersion"
-        classpath "com.github.Anuken.Mindustry:tools:$mindustryVersion"
-        classpath "com.github.Anuken.Arc:arc-core:$mindustryVersion"
-        classpath "com.github.Anuken.Arc:packer:$arcHash"*/
     }
 }
 plugins{
@@ -57,8 +50,8 @@ dependencies{
     compileOnly arcModule("extensions:arcnet")
 
 //        compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
-    annotationProcessor("com.github.Zelaux.ZelauxModCore:annotations:$modCoreVersion")
-    compileOnly "com.github.Zelaux.ZelauxModCore:annotations:$modCoreVersion"
+    annotationProcessor("com.github.Zelaux.MindustryModCore:annotations:$modCoreVersion")
+    compileOnly "com.github.Zelaux.MindustryModCore:annotations:$modCoreVersion"
     compileOnly mindustryModule("core")
 }
 
